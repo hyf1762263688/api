@@ -1,3 +1,4 @@
+# coding:utf-8
 import flask
 from flask import request, jsonify
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
@@ -7,7 +8,7 @@ tokenizer = GPT2Tokenizer.from_pretrained(hf_model_path)
 model = GPT2LMHeadModel.from_pretrained(hf_model_path)
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-
+app.config['JSON_AS_ASCII'] = False
 
 @app.route('/', methods=['GET'])
 def home():
@@ -23,8 +24,7 @@ def api_call():
     return jsonify(call(input))
 
 
-def call(input):
-    question = input
+def call(question):
     inputs = tokenizer(question, return_tensors='pt')
     generation_output = model.generate(**inputs,
                                        return_dict_in_generate=True,
